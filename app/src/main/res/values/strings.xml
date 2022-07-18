@@ -60,4 +60,8 @@
     <string name="setting_language">Setting Language</string>
     <string name="logout">Logout</string>
     <string name="register">Register</string>
+
+    //loading
+    <string name="retry">Try Again</string>
+    <string name="text_error">Sorry, Something is wrong!</string>
 </resources>

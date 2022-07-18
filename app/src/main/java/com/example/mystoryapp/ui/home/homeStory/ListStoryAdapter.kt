@@ -2,37 +2,37 @@ package com.example.mystoryapp.ui.home.homeStory
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.mystoryapp.R
-import com.example.mystoryapp.data.remote.response.ListStoryItem
+import com.example.mystoryapp.data.local.entity.StoryEntity
 import com.example.mystoryapp.databinding.ItemListStoryBinding
 import com.example.mystoryapp.ui.home.homeStory.ListStoryAdapter.MyViewHolder
 import com.example.mystoryapp.utlis.generateDateFormat
 
-class ListStoryAdapter: ListAdapter<ListStoryItem, MyViewHolder>(DIFF_CALLBACK) {
+class ListStoryAdapter: PagingDataAdapter<StoryEntity, MyViewHolder>(DIFF_CALLBACK) {
     private lateinit var onItemCLickCallback: OnItemCLickCallback
     fun setOnItemClickCallback(onItemCLickCallback: OnItemCLickCallback){
         this.onItemCLickCallback = onItemCLickCallback
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
-            override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StoryEntity>() {
+            override fun areItemsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
+            override fun areContentsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
                 return oldItem == newItem
             }
         }
     }
 
     inner class MyViewHolder (private val binding: ItemListStoryBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(listStoryItem: ListStoryItem){
+        fun bind(listStoryItem: StoryEntity){
             with(binding){
                 listStoryItem.apply {
                     storyUsername.text = name
@@ -64,11 +64,13 @@ class ListStoryAdapter: ListAdapter<ListStoryItem, MyViewHolder>(DIFF_CALLBACK) 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val data = getItem(position)
-        holder.bind(data)
+        if (data != null){
+            holder.bind(data)
+        }
     }
 
     interface OnItemCLickCallback{
-        fun onItemCLicked(listStoryItem: ListStoryItem,binding: ItemListStoryBinding)
+        fun onItemCLicked(listStoryItem: StoryEntity,binding: ItemListStoryBinding)
 
     }
 

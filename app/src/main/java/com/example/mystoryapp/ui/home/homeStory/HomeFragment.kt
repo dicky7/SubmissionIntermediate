@@ -14,15 +14,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mystoryapp.MainActivity
 import com.example.mystoryapp.R
-import com.example.mystoryapp.data.Result
-import com.example.mystoryapp.data.remote.response.ListStoryItem
+import com.example.mystoryapp.data.local.entity.StoryEntity
 import com.example.mystoryapp.databinding.FragmentHomeBinding
 import com.example.mystoryapp.databinding.ItemListStoryBinding
+import com.example.mystoryapp.ui.home.homeStory.HomeFragmentDirections.actionHomeFragmentToDetailStoryFragment
 import com.example.mystoryapp.utlis.ViewModelFactory
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 
@@ -100,6 +101,7 @@ class HomeFragment : Fragment(), ListStoryAdapter.OnItemCLickCallback {
             //get the SwipeRefreshLayout state
             swipeRefreshStory.setOnRefreshListener {
                 viewModelGetStory()
+                swipeRefreshStory.isRefreshing = false
             }
         }
     }
@@ -146,32 +148,15 @@ class HomeFragment : Fragment(), ListStoryAdapter.OnItemCLickCallback {
      * @return Unit
      */
     private fun viewModelGetStory(){
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                launch {
-                    viewModel.getStories(token).observe(viewLifecycleOwner){result->
-                        when(result){
-                            is Result.Loading->{
-                                true.showProgressBar()
-                            }
-                            is Result.Success->{
-                                false.showProgressBar()
-                                listStoryAdapter.submitList(result.data)
-                                recyclerViewer()
-                            }
-                            is Result.Error->{
-                                false.showProgressBar()
-                                Snackbar.make(
-                                    binding.root,
-                                    result.error,
-                                    Snackbar.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    }
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED){
+                viewModel.getStories(token).observe(viewLifecycleOwner) { result ->
+                    listStoryAdapter.submitData(lifecycle, result)
                 }
             }
         }
+        recyclerViewer()
+        showProgressBar()
     }
 
     /**
@@ -181,9 +166,25 @@ class HomeFragment : Fragment(), ListStoryAdapter.OnItemCLickCallback {
      * @return Unit
      */
     private fun recyclerViewer() {
+        listStoryAdapter = ListStoryAdapter().apply {
+            stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    if (positionStart == 0) {
+                        binding.rvStory.smoothScrollToPosition(0)
+                    }
+                }
+            })
+        }
+        listStoryAdapter.setOnItemClickCallback(this)
+        listStoryAdapter.refresh()
         binding.rvStory.apply {
             layoutManager = LinearLayoutManager(context)
-            this.adapter = listStoryAdapter
+            this.adapter = listStoryAdapter.withLoadStateFooter(
+                footer = LoadingStateAdapter{
+                    listStoryAdapter.retry()
+                }
+            )
         }
     }
 
@@ -192,9 +193,22 @@ class HomeFragment : Fragment(), ListStoryAdapter.OnItemCLickCallback {
      *
      * @return Boolean
      */
-    private fun Boolean.showProgressBar(){
+    private fun showProgressBar(){
         with(binding){
-            progressBar.isVisible = this@showProgressBar
+            // Pager LoadState listener
+            listStoryAdapter.addLoadStateListener { loadState ->
+                if ((loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && listStoryAdapter.itemCount < 1) || loadState.source.refresh is LoadState.Error) {
+                    // List empty or error
+                    layoutError.root.isVisible = true
+                    rvStory.isVisible = false
+                    progressBar.isVisible = false
+                } else {
+                    // List not empty
+                    layoutError.root.isVisible = false
+                    rvStory.isVisible = true
+                    progressBar.isVisible = false
+                }
+            }
         }
     }
 
@@ -208,17 +222,17 @@ class HomeFragment : Fragment(), ListStoryAdapter.OnItemCLickCallback {
     }
 
 
-    override fun onItemCLicked(listStoryItem: ListStoryItem, binding: ItemListStoryBinding) {
+    override fun onItemCLicked(storyEntity: StoryEntity, binding: ItemListStoryBinding) {
         //When we click on an item, we need to know which binding has been clicked and its transition name to set it in the extras object.
         val extras = FragmentNavigatorExtras(
             binding.storyUserAvatar to "avatar_profile",
-            binding.storyImage to listStoryItem.photoUrl,
-            binding.storyUsername to listStoryItem.name,
-            binding.storyDesc to listStoryItem.description,
-            binding.storyDatePost to listStoryItem.createdAt
+            binding.storyImage to storyEntity.photoUrl,
+            binding.storyUsername to storyEntity.name,
+            binding.storyDesc to storyEntity.description,
+            binding.storyDatePost to storyEntity.createdAt
         )
-        val toDetail = HomeFragmentDirections.actionHomeFragmentToDetailStoryFragment(listStoryItem)
-        toDetail.storyDetailParcelable= listStoryItem
+        val toDetail = actionHomeFragmentToDetailStoryFragment(storyEntity)
+        toDetail.storyDetailParcelable= storyEntity
         findNavController().navigate(toDetail, extras)
     }
 

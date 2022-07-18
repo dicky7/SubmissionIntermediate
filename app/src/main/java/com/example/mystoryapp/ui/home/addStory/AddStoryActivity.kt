@@ -22,6 +22,7 @@ import com.example.mystoryapp.R
 import com.example.mystoryapp.data.Result
 import com.example.mystoryapp.data.remote.response.UploadStoryResponse
 import com.example.mystoryapp.databinding.ActivityAddStoryBinding
+import com.example.mystoryapp.ui.home.HomeActivity
 import com.example.mystoryapp.utlis.*
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
@@ -144,6 +145,11 @@ class AddStoryActivity : AppCompatActivity() {
      */
     private fun setViewModel() {
         viewModel = ViewModelProvider(this, ViewModelFactory.getInstance(this))[AddStoryViewModel::class.java]
+        lifecycleScope.launch {
+            viewModel.getAuthToken().observe(this@AddStoryActivity){
+                token = it
+            }
+        }
     }
 
     /**
@@ -180,12 +186,6 @@ class AddStoryActivity : AppCompatActivity() {
 
                 lifecycleScope.launchWhenCreated{
                     launch {
-                        viewModel.getAuthToken().observe(this@AddStoryActivity){
-                            token = it
-                        }
-                    }
-
-                    launch {
                         viewModel.uploadStories(token, imageMultipart, descriptionStory).observe(this@AddStoryActivity){result->
                             resultUploadStories(result)
                         }
@@ -212,6 +212,9 @@ class AddStoryActivity : AppCompatActivity() {
                     setTitle(getString(R.string.success))
                     setMessage(getString(R.string.desc_success_upload_story))
                     setPositiveButton(getString(R.string.ok)){_,_->
+                        val intent = Intent(context, HomeActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
                         finish()
                     }
                     create()

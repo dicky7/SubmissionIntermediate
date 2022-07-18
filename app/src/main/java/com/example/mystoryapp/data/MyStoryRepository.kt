@@ -3,29 +3,31 @@ package com.example.mystoryapp.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
+import androidx.paging.*
 import com.example.mystoryapp.data.local.DataStoreManager
+import com.example.mystoryapp.data.local.database.StoryDatabase
+import com.example.mystoryapp.data.local.entity.StoryEntity
 import com.example.mystoryapp.data.remote.response.*
 import com.example.mystoryapp.data.remote.retrofit.ApiService
 import com.example.mystoryapp.utlis.generateBearerToken
-import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.http.Multipart
-import retrofit2.http.Part
 
 
 class MyStoryRepository private constructor(
     private val apiService: ApiService,
-    private val dataStoreManager: DataStoreManager
+    private val dataStoreManager: DataStoreManager,
+    private val storyDatabase: StoryDatabase
     ){
 
     companion object{
         private var instance: MyStoryRepository? = null
         fun getInstance(
             apiService: ApiService,
-            dataStoreManager: DataStoreManager
+            dataStoreManager: DataStoreManager,
+            storyDatabase: StoryDatabase
         ):MyStoryRepository = instance ?: synchronized(this){
-            instance ?: MyStoryRepository(apiService, dataStoreManager)
+            instance ?: MyStoryRepository(apiService, dataStoreManager, storyDatabase)
         }.also { instance = it }
     }
 
@@ -66,27 +68,24 @@ class MyStoryRepository private constructor(
     }
 
     /**
-     * Get stories List by calling API from apiServices
+     * Get stories List data from paging data source
      *
      * @param token user loin
-     * @param page optional
-     * @param size optional
      *
      * @return  liveData
      */
-    fun getStories(
-        token: String,
-        page: Int? = null,
-        size: Int? = null
-    ): LiveData<Result<List<ListStoryItem>>> = liveData {
-        emit(Result.Loading)
-        try {
-            val bearerToken = generateBearerToken(token)
-            val stories = apiService.getStories(bearerToken, page, size).listStory
-            emit(Result.Success(stories))
-        }catch (e:Exception){
-            emit(Result.Error(e.message.toString()))
-        }
+    fun getStories(token: String): LiveData<PagingData<StoryEntity>>{
+        val bearerToken = generateBearerToken(token)
+        @OptIn(ExperimentalPagingApi::class)
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            remoteMediator = StoryRemoteMediator(storyDatabase, apiService, bearerToken),
+            pagingSourceFactory = {
+                storyDatabase.storyDao().getAllStory()
+            }
+        ).liveData
     }
 
     /**

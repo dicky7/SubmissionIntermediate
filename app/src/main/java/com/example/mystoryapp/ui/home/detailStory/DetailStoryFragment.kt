@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.mystoryapp.R
+import com.example.mystoryapp.data.local.entity.StoryEntity
 import com.example.mystoryapp.data.remote.response.ListStoryItem
 import com.example.mystoryapp.databinding.FragmentDetailStoryBinding
 import com.example.mystoryapp.utlis.generateDateFormat
@@ -65,7 +66,7 @@ class DetailStoryFragment : Fragment() {
      * @param listStoryItem
      * @return Unit
      */
-    private fun parsingStory(listStoryItem: ListStoryItem?){
+    private fun parsingStory(listStoryItem: StoryEntity?){
         if (listStoryItem != null){
             with(binding){
                 storyUsername.text = listStoryItem.name
