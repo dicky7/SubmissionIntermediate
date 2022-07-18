@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.mystoryapp.ui.home.homeStory.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_detailStoryFragment"
+            app:destination="@id/detailStoryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addStoryActivity"
+            app:destination="@id/addStoryActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailStoryFragment"
+        android:name="com.example.mystoryapp.ui.home.detailStory.DetailStoryFragment"
+        android:label="fragment_detail_story"
+        tools:layout="@layout/fragment_detail_story">
+        <argument
+            android:name="storyDetailParcelable"
+            app:argType="com.example.mystoryapp.data.remote.response.ListStoryItem" />
+        <argument
+            android:name="id"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue='""' />
+    </fragment>
+    <activity
+        android:id="@+id/addStoryActivity"
+        android:name="com.example.mystoryapp.ui.home.addStory.AddStoryActivity"
+        android:label="activity_add_story"
+        tools:layout="@layout/activity_add_story" />
+</navigation>

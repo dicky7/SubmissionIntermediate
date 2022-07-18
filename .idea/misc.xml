@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/drawable-v24/ic_circle_24.xml" value="0.1125" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/drawable-v24/ic_circle_full_24.xml" value="0.1125" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/drawable/ic_avatar.xml" value="0.1335" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.133" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/drawable/ic_baseline_post_add_24.xml" value="0.133" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/drawable/ic_error.xml" value="0.1335" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/drawable/ic_loading.xml" value="0.1975" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/drawable/ic_select_image.xml" value="0.133" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/drawable/rounded_imageview.xml" value="0.1975" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/activity_add_story.xml" value="0.22083333333333333" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/activity_home.xml" value="0.22083333333333333" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/activity_main.xml" value="0.22083333333333333" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/fragment_add_story.xml" value="0.25" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/fragment_base.xml" value="0.22083333333333333" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/fragment_detail_story.xml" value="0.3273809523809524" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/fragment_dialog.xml" value="0.20358974358974358" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/fragment_image_picker.xml" value="0.25" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/fragment_login.xml" value="0.25" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/fragment_register.xml" value="0.22083333333333333" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/fragment_splash_screen.xml" value="0.29141104294478526" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/layout/item_list_story.xml" value="0.33" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/menu/home_menu.xml" value="0.22083333333333333" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/menu/menu_add.xml" value="0.22083333333333333" />
+        <entry key="..\:/D/Coding/Android/Android Intermediate/MyStoryApp/app/src/main/res/xml/file_paths.xml" value="0.1811965811965812" />
+        <entry key="..\:/D/kuliah/Bangkit Academy/Dicoding/a14-android-fundamental-labs-main_2/a14-android-fundamental-labs-main/local-data-persistent/LatihanRepository (starter)/kotlin/app/src/main/res/drawable/ic_loading.xml" value="0.1975" />
+        <entry key="..\:/D/kuliah/Bangkit Academy/Dicoding/a14-android-fundamental-labs-main_2/a14-android-fundamental-labs-main/local-data-persistent/LatihanRepository (starter)/kotlin/app/src/main/res/drawable/ic_refresh_black.xml" value="0.1975" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
